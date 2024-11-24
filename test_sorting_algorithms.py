@@ -19,7 +19,7 @@ sorting_algorithms: Dict[str, Callable[[List[int]], Tuple[int, int]]] = {
 dict_of_list_types: Dict[str, Callable[[int], List[int]]] = {
     "Sorted": lambda size: list(range(size + 1)),
     "Reverse Sorted": lambda size: list(range(size, -1, -1)),
-    "Even Numbers": lambda size: [1234.567] * size,
+    "Equal Numbers": lambda size: [1234.567] * size,
     "Random Integers (With Duplicates)": lambda size: [random.randint(-int(size * 0.4), int(size * 0.4)) for _ in range(size)],
     "Random Floats (Unique Likely)": lambda size: [random.uniform(-size, size) for _ in range(size)]
 }
@@ -31,7 +31,7 @@ def test_single_sorting_on_list_types(sort_name: str, list_size: int) -> None:
     # Test the specified sorting algorithm on different list types.
 
 
-    for list_type in dict_of_list_types.keys():
+    for list_type, test_list in dict_of_list_types.items():
         print(f"\nTesting '{sort_name}' on '{list_type}' list with size {list_size}:")
 
         # Generate the list
@@ -50,15 +50,6 @@ def test_single_sorting_on_list_types(sort_name: str, list_size: int) -> None:
         print(f"  - Comparisons: {comparisons}")
         print(f"  - Initializations: {initializations}")
         print(f"  - Total Operations: {total_operations}")
-
-
-sort_name = "Quick Sort"
-sort_name = "Merge Sort"
-sort_name = "Insertion Sort"
-sort_name = "Heap Sort"
-list_size = 100
-
-# test_single_sorting_on_list_types(sort_name, list_size)
 
 
 
@@ -110,48 +101,51 @@ def test_sorting_algorithms_with_graphs(size: int, metric: str = "total") -> Non
     plt.subplots_adjust(hspace=0.5)
     plt.show()
 
-size = 10_000
-metric = "comparison"
-metric = "initialization"
-metric = "total"
-
-test_sorting_algorithms_with_graphs(size, metric)
 
 
-
-def test_sorting_algorithms_with_prints() -> None:
+def test_sorting_algorithms_with_prints(list_size: int) -> None:
 
     # Test sorting algorithms on predefined test cases and print results.
 
-    test_cases = [
-        {"name": "Sorted list", "arr": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},
-        {"name": "Reverse sorted list", "arr": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]},
-        {"name": "List with duplicates", "arr": [3, 5, 3, 7, 8, 5, 1, 3, 5, 7]},
-        {"name": "Mixed floats and integers", "arr": [3.1, 4.2, 5, 2.8, 1, 7.6, 3, 6.9, 2]},
-        {"name": "Positive numbers", "arr": [12, 7, 5, 18, 11, 3, 9, 10, 15]},
-        {"name": "Mixed positive and negative", "arr": [-3, -7, 2, 8, -1, 4, -5, 9, 0, -2]},
-        {"name": "Negative numbers only", "arr": [-10, -3, -5, -8, -2, -7, -6, -4, -9]},
-        {"name": "Even Numbers", "arr": [1234] * 10},
-        {"name": "Small list", "arr": [36, 481, 29]},
-        {"name": "Medium random integers", "arr": random.sample(range(-1000,1000), 500)},
-        {"name": "Large random integers with duplicates", "arr": [random.choice(range(-1000,1000)) for _ in range(1000)]}
-    ]
-    
-    for test in test_cases:
-        print(f"\n{test['name']}:")
+    for list_type in dict_of_list_types.keys():
+        print(f"\nTesting all sorting on '{list_type}' list with size {list_size}:")
+
+        # Generate the list
+        test_list = dict_of_list_types[list_type](list_size)
         
         results = []
         for name, sort_func in sorting_algorithms.items():
-            arr_copy = test["arr"].copy()
+            arr_copy = test_list.copy()
             comparisons, initializations = sort_func(arr_copy)
             total = comparisons + initializations
-            sorted_correctly = arr_copy == sorted(test["arr"])
+            sorted_correctly = arr_copy == sorted(test_list)
             results.append((name, comparisons, initializations, total, sorted_correctly))
         
         best_result = min(results, key=lambda x: x[3])
-        print(f"  - Most efficient algorithm: {best_result[0]}")
+        print(f"\n  - Most efficient sorting: {best_result[0]}\n")
         
         for name, comparisons, initializations, total, sorted_correctly in results:
             print(f"    - {name}: Sorted: {sorted_correctly}, Comparisons: {comparisons}, Initializations: {initializations}, Total Operations : {total}")
 
-# test_sorting_algorithms()
+
+def main() -> None:
+
+    metric = "comparison"
+    metric = "initialization"
+    metric = "total"
+
+    sort_name = "Quick Sort"
+    sort_name = "Merge Sort"
+    sort_name = "Insertion Sort"
+    sort_name = "Heap Sort"
+
+    list_size = 100
+    list_size = 1_000
+    list_size = 10_000
+
+    # test_single_sorting_on_list_types(sort_name, list_size)
+    test_sorting_algorithms_with_graphs(list_size, metric)
+    # test_sorting_algorithms_with_prints(list_size)
+
+if __name__ == '__main__':
+    main()
