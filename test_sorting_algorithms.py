@@ -58,7 +58,7 @@ sort_name = "Insertion Sort"
 sort_name = "Heap Sort"
 list_size = 100
 
-test_single_sorting_on_list_types(sort_name, list_size)
+# test_single_sorting_on_list_types(sort_name, list_size)
 
 
 
@@ -115,7 +115,7 @@ metric = "comparison"
 metric = "initialization"
 metric = "total"
 
-# test_sorting_algorithms_with_graphs(size, metric)
+test_sorting_algorithms_with_graphs(size, metric)
 
 
 
